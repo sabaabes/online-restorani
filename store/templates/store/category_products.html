@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ category.name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* ზედა ნავიგაცია */
+        .top-bar {
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .top-bar h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        .nav-btn {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+        .nav-btn:hover {
+            color: #0056b3;
+        }
+
+        
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .product-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            width: 220px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+            border: 1px solid #eaeaea;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: #ffc107;
+        }
+
+        .product-image-box {
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-card h3 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin: 0 0 6px 0;
+            font-weight: 600;
+        }
+        .price {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .cart-form {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: auto;
+        }
+        .cart-form input[type="number"] {
+            width: 50px;
+            padding: 6px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .cart-btn {
+            background-color: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            flex-grow: 1;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .cart-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #777;
+            font-size: 16px;
+            margin-top: 40px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <h1>{{ category.name }}</h1>
+        <a href="{% url 'menu' %}" class="nav-btn">← მენიუში დაბრუნება</a>
+    </div>
+
+    <div class="container">
+        <div class="product-container">
+            {% for product in products %}
+                <div class="product-card">
+                    <div>
+                        {% if product.image %}
+                            <div class="product-image-box">
+                                <img src="{{ product.image }}" alt="{{ product.name }}">
+                            </div>
+                        {% endif %}
+                        <h3>{{ product.name }}</h3>
+                        <div class="price">ფასი: {{ product.price }} ლარი</div>
+                    </div>
+                    
+                    <form action="{% url 'add_to_cart' product.id %}" method="POST" class="cart-form">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="1" min="1">
+                        <button type="submit" class="cart-btn">კალათა</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p class="empty-msg">ამ კატეგორიაში პროდუქტები ჯერ არ არის.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    
+    <a href="{% url 'cart_view' %}" style="
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: #ffc107;
+        color: #212529;
+        padding: 12px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 1000;
+        transition: background 0.3s, transform 0.3s;
+    " onmouseover="this.style.backgroundColor='#e0a800'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#ffc107'; this.style.transform='scale(1)';">
+        🛒 კალათა
+    </a>
+
+</body>
+</html>

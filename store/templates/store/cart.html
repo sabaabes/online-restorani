@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>შენი კალათა</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 30px; background-color: #f9f9f9;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 30px;">
+        <h1 style="margin: 0; color: #333;">კალათა</h1>
+        <a href="{% url 'menu' %}" style="text-decoration: none; color: #007bff;">← მენიუში დაბრუნება</a>
+    </div>
+
+    {% if cart_items %}
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <thead>
+                <tr style="background-color: #f1f1f1; text-align: left;">
+                    <th style="padding: 15px; border-bottom: 1px solid #ddd;">პროდუქტი</th>
+                    <th style="padding: 15px; border-bottom: 1px solid #ddd;">ფასი</th>
+                    <th style="padding: 15px; border-bottom: 1px solid #ddd;">რაოდენობა</th>
+                    <th style="padding: 15px; border-bottom: 1px solid #ddd;">სულ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td style="padding: 15px; border-bottom: 1px solid #eee;">{{ item.product.name }}</td>
+                    <td style="padding: 15px; border-bottom: 1px solid #eee;">{{ item.product.price }} ლარი</td>
+                    <td style="padding: 15px; border-bottom: 1px solid #eee;">{{ item.quantity }}</td>
+                    <td style="padding: 15px; border-bottom: 1px solid #eee;">{{ item.product.price|floatformat:2 }} ლარი</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <div>
+                <a href="{% url 'clear_cart' %}" style="text-decoration: none; background: #dc3545; color: white; padding: 10px 15px; border-radius: 4px; font-weight: bold;">კალათის გასუფთავება</a>
+            </div>
+            <div style="text-align: right;">
+                <h3 style="margin: 0 0 15px 0;">საერთო თანხა: <span style="color: #28a745;">{{ total_price }} ლარი</span></h3>
+                <a href="{% url 'checkout' %}" style="text-decoration: none; background: #28a745; color: white; padding: 12px 25px; border-radius: 4px; font-weight: bold; font-size: 16px;">შეკვეთის გაფორმება</a>
+            </div>
+        </div>
+        </div>
+    {% else %}
+        <p style="text-align: center; color: #775; font-size: 18px; margin-top: 50px;">თქვენი კალათა ცარიელია.</p>
+    {% endif %}
+
+</body>
+</html>
